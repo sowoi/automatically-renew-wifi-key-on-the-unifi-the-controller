@@ -137,7 +137,7 @@ def forceProvision(host,unifi_user_name,unifi_user_password,debug):
 # send mail with changes 
 def sendMailwithChanges(oldkey,wifikey,ssid, mailRecipient, mailSender,debug):
 
- mailSubject = 'Changed' + ssid +'"'
+ mailSubject = 'Changed ' + ssid +'"'
  mailBody = "Wifikey of SSID " + ssid + " changed from " + oldkey +" to "+ wifikey
  if debug == True:
   print("MailSubject: "+ mailSubject)
