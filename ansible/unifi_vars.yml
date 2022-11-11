@@ -1,0 +1,6 @@
+unifiuser:
+unifipassword:
+wifissid:
+sshkeyset: yes|no
+wifikeyset: yes|no
+wifi_key: "{{ lookup('password', '/dev/null length=12 chars=ascii_letters') }}"

@@ -1,0 +1,32 @@
+- name: unifichanger
+  gather_facts: False
+  hosts: unifi2
+
+  tasks:
+
+    - name: set vars
+      include_vars: unifi_vars.yml
+    
+    - name: prompt ssh
+      ansible.builtin.include_tasks: ask_ssh_password.yml
+      when: sshkeyset == False
+ 
+    - debug:
+         var: ssh_password
+      when: sshkeyset == False
+    - name: prompt wifi
+      ansible.builtin.include_tasks: ask_wifi_key.yml
+      when: wifikeyset == True
+
+
+
+    - debug:
+        var: wifi_key
+      when: wifikeyset == True
+
+    - name: access mongodb
+      ansible.builtin.include_tasks: mongodb.yml
+
+
+    - name: unifi api tasks
+      ansible.builtin.include_tasks: unifiapi.yml

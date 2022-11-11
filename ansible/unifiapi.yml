@@ -1,0 +1,43 @@
+- name: Login to unifi API, then use the returned cookie to access the app for device provisioning
+  uri:
+    url: https://{{ inventory_hostname }}:8443/api/login
+    method: POST
+    body_format: json
+    body:
+      username: "{{ unifiuser }}"
+      password: "{{ unifipassword }}"
+      enter: Sign in
+    status_code: 200
+    validate_certs: no
+  register: login
+
+
+- name: Connect to website using previously stored cookie and save devices list
+  uri:
+    url: https://{{ inventory_hostname }}:8443/api/s/default/stat/device
+    method: GET
+    return_content: yes
+    validate_certs: no
+    headers:
+      Cookie: "{{ login.cookies_string }}"
+  register: devices
+       
+- name: search for mac in devices list and provision
+  uri:
+    url: https://{{ inventory_hostname }}:8443/api/s/default/cmd/devmgr
+    method: POST
+    body_format: json
+    body:
+      cmd: force-provision
+      mac: "{{ item }}"
+    validate_certs: no
+    headers:
+      Cookie: "{{ login.cookies_string }}"
+  with_items: "{{ devices | community.general.json_query('*.data[*].mac') }}"
+  register: mac
+
+
+
+
+
+

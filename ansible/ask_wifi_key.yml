@@ -1,0 +1,6 @@
+- pause:
+    prompt: "Please enter wifi key"
+    echo: no
+  register: result
+- set_fact:
+    wifi_key: "{{ result.user_input }}"
